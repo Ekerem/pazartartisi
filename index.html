@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Pazar / Manav Tartısı: Kuruşuna ve Gramına Kadar! (16:9 Akıllı Tahta)</title>
+  <style>
+    /* Modern Reset & Theme Variables */
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-light: #10B981;
+      --accent: #F59E0B;
+      --accent-hover: #D97706;
+      --accent-light: #FEF3C7;
+      --bg-cream: #F8FAF8;
+      --card-bg: #FFFFFF;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --led-bg: #0F172A;
+      --led-glow: #10B981;
+      --led-text: #34D399;
+      --danger: #EF4444;
+      --danger-light: #FEE2E2;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-md: 0 6px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 28px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #FEF9C3 100%);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    /* 16:9 Aspect Ratio Container for Smart Board & Adaptive Displays */
+    .app-container {
+      width: min(100%, 1280px, calc((100vh - 16px) * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+      border-radius: var(--radius-lg);
+      border: 2px solid #E6F4EA;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Fullscreen mode expands to edge */
+    body.is-fullscreen { padding: 0; }
+    body.is-fullscreen .app-container {
+      width: 100vw;
+      height: 100vh;
+      aspect-ratio: auto;
+      border-radius: 0;
+      border: none;
+    }
+
+    /* Top Bar */
+    header.game-header {
+      background: linear-gradient(90deg, #059669 0%, #0D9488 100%);
+      color: white;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(5, 150, 105, 0.2);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-icon {
+      font-size: 1.3rem;
+      background: rgba(255,255,255,0.22);
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .smartboard-badge {
+      font-size: 0.72rem;
+      background: #FCD34D;
+      color: #78350F;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-btn {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: white;
+      border-radius: 20px;
+      padding: 5px 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .header-btn:hover, .header-btn:active {
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(1.03);
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .icon-btn:hover, .icon-btn:active {
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(1.05);
+    }
+
+    /* Stats Bar (Game HUD) */
+    .hud-bar {
+      background: #F1F5F9;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .hud-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .hud-item span.value {
+      color: var(--primary);
+      font-size: 1.15rem;
+    }
+    .hud-item.score-badge span.value {
+      color: #D97706;
+    }
+    .timer-pill {
+      background: #FEF3C7;
+      color: #B45309;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid #FCD34D;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+    .timer-pill.urgent {
+      background: #FEE2E2;
+      color: #B91C1C;
+      border-color: #FCA5A5;
+      animation: pulseAlert 0.8s infinite alternate;
+    }
+
+    @keyframes pulseAlert {
+      from { transform: scale(1); }
+      to { transform: scale(1.06); }
+    }
+
+    /* Progress bar */
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: #E2E8F0;
+      flex-shrink: 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10B981, #059669);
+      width: 10%;
+      transition: width 0.35s ease;
+    }
+
+    /* Main Screen Views */
+    .view-screen {
+      padding: 14px 18px;
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      animation: fadeIn 0.3s ease;
+    }
+    .view-screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 16:9 Grid Layouts for Widescreen Smart Boards */
+    .widescreen-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+      height: 100%;
+      align-items: stretch;
+    }
+
+    .column-left, .column-right {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    /* Welcome / Tutorial Screen (16:9 Split) */
+    .welcome-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 20px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .welcome-intro {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .welcome-hero-badge {
+      font-size: 3.8rem;
+      margin-bottom: 6px;
+      display: inline-block;
+      animation: bounceFloat 2.4s infinite ease-in-out;
+    }
+
+    @keyframes bounceFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1.welcome-title {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #065F46;
+      margin-bottom: 6px;
+    }
+
+    p.welcome-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      line-height: 1.45;
+    }
+
+    /* Reference Place Value Table */
+    .place-value-card {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: var(--radius-md);
+      padding: 14px;
+      text-align: left;
+    }
+
+    .place-table-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0F766E;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .place-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+
+    .place-box {
+      background: white;
+      border: 1.5px solid #CBD5E1;
+      border-radius: var(--radius-sm);
+      padding: 10px 6px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .place-box.highlight {
+      border-color: #10B981;
+      background: #F0FDF4;
+    }
+    .place-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+    .place-decimal {
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #059669;
+    }
+    .place-fraction {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #B45309;
+      margin-top: 4px;
+    }
+
+    /* Math fraction inline display */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 1;
+      font-size: 0.95em;
+      padding: 0 2px;
+    }
+    .frac .top {
+      border-bottom: 2px solid currentColor;
+      padding-bottom: 2px;
+    }
+    .frac .bottom {
+      padding-top: 2px;
+    }
+
+    /* Settings toggles on start */
+    .settings-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .toggle-pill {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #334155;
+      transition: all 0.2s;
+    }
+    .toggle-pill.active {
+      background: #059669;
+      color: white;
+      border-color: #047857;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 14px 28px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 52px;
+    }
+    .btn-primary:hover, .btn-primary:active {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45);
+    }
+
+    /* Scenario Card */
+    .customer-bubble {
+      background: #FEF9C3;
+      border: 1.5px solid #FDE047;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .customer-avatar {
+      font-size: 2.2rem;
+      background: white;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+    .customer-text {
+      font-size: 0.95rem;
+      color: #713F12;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+    .customer-text b {
+      color: #065F46;
+      font-size: 1.05rem;
+    }
+
+    /* Digital Scale Display */
+    .scale-station {
+      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.5), 0 8px 24px rgba(15,23,42,0.2);
+      border: 3px solid #334155;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .scale-station-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #94A3B8;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+    }
+
+    .tare-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #34D399;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34D399;
+      box-shadow: 0 0 8px #34D399;
+    }
+
+    /* Big LED Digits */
+    .digital-meter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px 0;
+    }
+
+    .digit-box {
+      background: #020617;
+      border: 2px solid #1E293B;
+      border-radius: var(--radius-sm);
+      min-width: 54px;
+      height: 68px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: "Courier New", Courier, monospace, monospace;
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #64748B;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .digit-box .digit-label {
+      font-family: system-ui, sans-serif;
+      font-size: 0.65rem;
+      color: #64748B;
+      text-transform: uppercase;
+      font-weight: 700;
+      position: absolute;
+      bottom: 2px;
+      letter-spacing: -0.2px;
+    }
+
+    .digit-box.target {
+      color: #FBBF24;
+      border-color: #F59E0B;
+      background: #451A03;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+      animation: blinkBox 1.2s infinite ease-in-out;
+    }
+    .digit-box.target .digit-label {
+      color: #FCD34D;
+    }
+
+    @keyframes blinkBox {
+      0%, 100% { border-color: #F59E0B; transform: scale(1); }
+      50% { border-color: #FDE68A; transform: scale(1.05); }
+    }
+
+    .comma-separator {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: #34D399;
+      margin: 0 -2px;
+      align-self: flex-end;
+      line-height: 1;
+      padding-bottom: 4px;
+    }
+
+    .scale-unit-badge {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #34D399;
+      margin-left: 8px;
+      align-self: center;
+    }
+
+    /* Inspector Bar below scale */
+    .inspector-banner {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 34px;
+    }
+    .inspector-banner b {
+      color: #FCD34D;
+    }
+
+    /* Mechanical Balance Scale Container (Mode 3) */
+    .mechanical-scale-container {
+      background: #F8FAFC;
+      border: 1.5px dashed #CBD5E1;
+      border-radius: var(--radius-md);
+      padding: 6px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    .mechanical-scale-container.show {
+      display: flex;
+    }
+
+    .balance-beam-svg {
+      width: 100%;
+      max-width: 260px;
+      height: 95px;
+      overflow: visible;
+    }
+
+    /* Question & Task Instructions */
+    .task-instruction-card {
+      background: white;
+      border-left: 5px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      box-shadow: var(--shadow-sm);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0F172A;
+      line-height: 1.4;
+    }
+
+    /* Answer Option Cards */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      flex: 1;
+    }
+
+    .option-card {
+      background: white;
+      border: 2px solid #E2E8F0;
+      border-radius: var(--radius-md);
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.18s ease;
+      position: relative;
+      min-height: 72px;
+    }
+
+    .option-card:hover {
+      border-color: #10B981;
+      background: #F0FDF4;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .option-card:focus-visible {
+      outline: 3px solid #F59E0B;
+      outline-offset: 2px;
+    }
+    .option-card:active {
+      transform: scale(0.97);
+    }
+
+    .option-card.correct {
+      background: #D1FAE5 !important;
+      border-color: #059669 !important;
+      color: #065F46 !important;
+      animation: popWin 0.4s ease;
+    }
+
+    .option-card.wrong {
+      background: #FEE2E2 !important;
+      border-color: #DC2626 !important;
+      color: #991B1B !important;
+      animation: shakeWrong 0.4s ease;
+    }
+
+    .shortcut-badge {
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      font-size: 0.72rem;
+      background: #F1F5F9;
+      color: #64748B;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 800;
+      border: 1px solid #CBD5E1;
+    }
+
+    @keyframes popWin {
+      0% { transform: scale(0.95); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .option-fraction {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0F766E;
+    }
+
+    .option-unit {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* Feedback Drawer / Banner */
+    .feedback-banner {
+      display: none;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      animation: fadeIn 0.25s ease;
+    }
+    .feedback-banner.show {
+      display: block;
+    }
+    .feedback-banner.success {
+      background: #ECFDF5;
+      border: 1.5px solid #6EE7B7;
+      color: #065F46;
+    }
+    .feedback-banner.error {
+      background: #FEF2F2;
+      border: 1.5px solid #FCA5A5;
+      color: #991B1B;
+    }
+    .feedback-title {
+      font-size: 0.98rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+    .feedback-desc {
+      font-size: 0.88rem;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    /* Modal (Reference Table & Info) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-box {
+      background: white;
+      border-radius: var(--radius-lg);
+      max-width: 600px;
+      width: 100%;
+      padding: 22px;
+      box-shadow: var(--shadow-lg);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+    .modal-header h2 {
+      font-size: 1.2rem;
+      color: #065F46;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .close-btn {
+      background: #F1F5F9;
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #64748B;
+      cursor: pointer;
+    }
+
+    /* End Screen (16:9 Split) */
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .result-left {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .result-score-ring {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+    }
+    .score-big {
+      font-size: 2.1rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .score-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+    }
+
+    .badge-card {
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+      border: 2px solid #F59E0B;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      text-align: center;
+      width: 100%;
+      max-width: 320px;
+    }
+    .badge-icon {
+      font-size: 2.4rem;
+      margin-bottom: 2px;
+    }
+    .badge-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #92400E;
+    }
+    .badge-desc {
+      font-size: 0.82rem;
+      color: #B45309;
+      margin-top: 3px;
+    }
+
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stat-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: var(--radius-sm);
+      padding: 10px 4px;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .stat-lbl {
+      font-size: 0.78rem;
+      color: #64748B;
+      font-weight: 600;
+    }
+
+    /* Confetti Canvas */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Fallback for narrow vertical screens (Mobile Portrait) */
+    @media (max-width: 768px) and (orientation: portrait) {
+      .app-container {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: auto;
+      }
+      .widescreen-grid, .welcome-grid, .result-grid {
+        grid-template-columns: 1fr;
+      }
+      .smartboard-badge, #fullscreenLabel { display: none; }
+      .hud-bar { flex-wrap: wrap; gap: 6px 12px; }
+      .digit-box {
+        min-width: 44px;
+        height: 60px;
+        font-size: 1.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app-container" id="appContainer">
+    <!-- Header -->
+    <header class="game-header">
+      <div class="brand-title">
+        <div class="brand-icon">⚖️</div>
+        <span>Pazar Tartısı</span>
+        <span class="smartboard-badge">16:9 Akıllı Tahta</span>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn" id="fullscreenToggleBtn" title="Tam Ekran (F11)">
+          <span id="fullscreenIcon">⛶</span>
+          <span id="fullscreenLabel">Tam Ekran</span>
+        </button>
+        <button class="icon-btn" id="soundToggleBtn" title="Sesi Aç/Kapat" aria-label="Sesi Aç/Kapat">🔊</button>
+        <button class="icon-btn" id="infoModalBtn" title="Basamak Rehberi" aria-label="Basamak Rehberi">📖</button>
+      </div>
+    </header>
+
+    <!-- Game HUD (Visible during gameplay) -->
+    <div class="hud-bar" id="gameHud" style="display: none;">
+      <div class="hud-item">
+        <span>Soru:</span>
+        <span class="value" id="hudQuestionNum">1 / 10</span>
+      </div>
+      <div class="hud-item score-badge">
+        <span>Puan:</span>
+        <span class="value" id="hudScore">0</span>
+      </div>
+      <div class="hud-item">
+        <span>Can:</span>
+        <span class="value" id="hudLives">❤️❤️❤️</span>
+      </div>
+      <div class="timer-pill" id="timerBadge">
+        ⏱️ <span id="timerText">30s</span>
+      </div>
+    </div>
+    <div class="progress-track" id="progressTrack" style="display: none;">
+      <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- 1. START / WELCOME SCREEN (16:9 Widescreen Grid) -->
+    <section class="view-screen active" id="startScreen">
+      <div class="welcome-grid">
+        <div class="welcome-intro">
+          <div class="welcome-hero-badge">🍏⚖️🛒</div>
+          <h1 class="welcome-title">Pazar / Manav Tartısı</h1>
+          <p class="welcome-subtitle">
+            <b>Kuruşuna ve Gramına Kadar!</b><br>
+            MEB 6. Sınıf ondalık gösterimlerin basamak değerlerini kesir parçalarıyla eşleştir ve akıllı tahtada reyon şampiyonu ol.
+          </p>
+
+          <!-- Mode Settings -->
+          <div class="settings-row">
+            <button class="toggle-pill active" id="timerToggleBtn">
+              <span>⏱️ 30 Sn Zamanlı</span>
+            </button>
+            <button class="toggle-pill active" id="soundPrefBtn">
+              <span>🔊 Sesler Açık</span>
+            </button>
+          </div>
+
+          <button class="btn-primary" id="startGameBtn">
+            <span>Hemen Oyuna Başla</span>
+            <span>▶️</span>
+          </button>
+        </div>
+
+        <!-- Place value quick review -->
+        <div class="place-value-card">
+          <div class="place-table-title">
+            <span>💡 Basamak Değerleri & Kesir Bağlantısı (MEB 6. Sınıf)</span>
+          </div>
+          <div class="place-grid">
+            <div class="place-box highlight">
+              <div class="place-name">Onda Birler</div>
+              <div class="place-decimal">0,1</div>
+              <div class="place-fraction">
+                <span class="frac"><span class="top">1</span><span class="bottom">10</span></span>
+              </div>
+            </div>
+            <div class="place-box highlight">
+              <div class="place-name">Yüzde Birler</div>
+              <div class="place-decimal">0,01</div>
+              <div class="place-fraction">
+                <span class="frac"><span class="top">1</span><span class="bottom">100</span></span>
+              </div>
+            </div>
+            <div class="place-box highlight">
+              <div class="place-name">Binde Birler</div>
+              <div class="place-decimal">0,001</div>
+              <div class="place-fraction">
+                <span class="frac"><span class="top">1</span><span class="bottom">1000</span></span>
+              </div>
+            </div>
+          </div>
+          <div style="background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 10px; margin-top: 12px; font-size: 0.85rem; color: #92400E; line-height: 1.4;">
+            ✨ <b>Akıllı Tahta İpucu:</b> Oyunda tartıdaki herhangi bir rakama dokunarak basamak adını ve kesir açılımını anında büyütebilirsin!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. GAME PLAY SCREEN (16:9 Widescreen 2-Column Split) -->
+    <section class="view-screen" id="gameScreen">
+      <div class="widescreen-grid">
+        <!-- Left Column: Customer + Scale + Inspector -->
+        <div class="column-left">
+          <!-- Customer dialogue -->
+          <div class="customer-bubble">
+            <div class="customer-avatar" id="customerAvatar">👴</div>
+            <div class="customer-text" id="customerDialogue">
+              "Ali amca 3,45 kg elma tarttırdı. Ekranda yanıp sönen <b>5</b> rakamı tartıda ne kadarlık bir kesri temsil eder?"
+            </div>
+          </div>
+
+          <!-- Digital Scale / Cash Register Station -->
+          <div class="scale-station">
+            <div class="scale-station-header">
+              <div class="tare-indicator">
+                <div class="status-dot"></div>
+                <span id="scaleModeTag">HASSAS MANAV TARTISI</span>
+              </div>
+              <div style="color: #FCD34D; font-size: 0.78rem;">Dokun = İpucu Aç! 🔍</div>
+            </div>
+
+            <!-- Big LCD Digits Display -->
+            <div class="digital-meter" id="digitsContainer">
+              <!-- Dynamically populated digit boxes -->
+            </div>
+
+            <!-- Live inspector clue display -->
+            <div class="inspector-banner" id="inspectorClueBox">
+              🔍 Yanıp sönen basamağın kesir karşılığını sağdaki seçeneklerden bul!
+            </div>
+          </div>
+
+          <!-- Optional Interactive Mechanical Balance Scale (Mode 3) -->
+          <div class="mechanical-scale-container" id="mechScaleContainer">
+            <svg class="balance-beam-svg" viewBox="0 0 300 120" id="balanceSvg">
+              <polygon points="150,55 138,105 162,105" fill="#475569" />
+              <rect x="120" y="105" width="60" height="10" rx="3" fill="#334155" />
+              <g id="scaleBeamGroup" style="transform-origin: 150px 55px; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
+                <rect x="30" y="52" width="240" height="7" rx="3.5" fill="#CBD5E1" stroke="#94A3B8" stroke-width="1.5" />
+                <circle cx="150" cy="55" r="7" fill="#F59E0B" />
+                <line x1="45" y1="56" x2="30" y2="90" stroke="#64748B" stroke-width="1.5" />
+                <line x1="45" y1="56" x2="60" y2="90" stroke="#64748B" stroke-width="1.5" />
+                <path d="M 20 90 Q 45 106 70 90 Z" fill="#94A3B8" />
+                <text x="45" y="86" text-anchor="middle" font-size="16" id="leftPanEmoji">🍎</text>
+                <line x1="255" y1="56" x2="240" y2="90" stroke="#64748B" stroke-width="1.5" />
+                <line x1="255" y1="56" x2="270" y2="90" stroke="#64748B" stroke-width="1.5" />
+                <path d="M 230 90 Q 255 106 280 90 Z" fill="#94A3B8" />
+                <text x="255" y="86" text-anchor="middle" font-size="16" id="rightPanEmoji">⚖️</text>
+              </g>
+            </svg>
+            <div style="font-size: 0.8rem; font-weight: 700; color: #475569; margin-top: 2px;">
+              Teraziyi dengelemek için doğru kesir ağırlığını seç!
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Question + Options + Feedback + Next -->
+        <div class="column-right">
+          <!-- Question Prompt -->
+          <div class="task-instruction-card" id="taskQuestionText">
+            Yanıp sönen rakam hangi kesre karşılık gelir?
+          </div>
+
+          <!-- Answer Options Grid (Big Touch Targets) -->
+          <div class="options-grid" id="optionsContainer">
+            <!-- Dynamically injected option cards -->
+          </div>
+
+          <!-- Feedback Banner (Appears after answer) -->
+          <div class="feedback-banner" id="feedbackBanner">
+            <div class="feedback-title" id="feedbackTitle">🎉 Harika! Doğru Cevap</div>
+            <div class="feedback-desc" id="feedbackDesc">Açıklama metni burada görünür.</div>
+          </div>
+
+          <!-- Next Button -->
+          <button class="btn-primary" id="nextQuestionBtn" style="display: none; margin-top: auto;">
+            <span>Sonraki Müşteri</span>
+            <span>➡️</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. GAME OVER / RESULT SCREEN (16:9 Widescreen Grid) -->
+    <section class="view-screen" id="resultScreen">
+      <div class="result-grid">
+        <div class="result-left">
+          <div class="result-score-ring">
+            <span class="score-big" id="finalScoreVal">1000</span>
+            <span class="score-label">Toplam Puan</span>
+          </div>
+
+          <div class="badge-card">
+            <div class="badge-icon" id="badgeEmoji">🏆</div>
+            <div class="badge-name" id="badgeTitle">Manavlar Kralı & Ondalık Şampiyonu</div>
+            <div class="badge-desc" id="badgeSummary">
+              Tüm basamakları kuruşu ve gramına kadar kusursuz yorumladın!
+            </div>
+          </div>
+        </div>
+
+        <div class="result-right">
+          <div class="stat-cards-grid">
+            <div class="stat-card">
+              <div class="stat-val" style="color: #059669;" id="statCorrect">10</div>
+              <div class="stat-lbl">Doğru</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" style="color: #EF4444;" id="statWrong">0</div>
+              <div class="stat-lbl">Yanlış</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" style="color: #F59E0B;" id="statRate">%100</div>
+              <div class="stat-lbl">Başarı</div>
+            </div>
+          </div>
+
+          <!-- Performance Summary -->
+          <div class="place-value-card" style="margin-bottom: 14px;">
+            <div class="place-table-title">🎯 Akıllı Tahta Basamak Analizi</div>
+            <p style="font-size: 0.9rem; color: #475569; line-height: 1.4;" id="pedagogyAnalysisText">
+              Virgülden sonraki basamakları kesirlerle eşleştirme becerinde harika bir başarı yakaladın!
+            </p>
+          </div>
+
+          <button class="btn-primary" id="restartGameBtn">
+            <span>Yeniden Oyna</span>
+            <span>🔄</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Reference Modal (Öğrenme / Bilgi Kartı) -->
+  <div class="modal-overlay" id="infoModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2>📖 Basamak Değerleri Rehberi</h2>
+        <button class="close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      <div style="line-height: 1.5; font-size: 0.92rem; color: #334155;">
+        <p style="margin-bottom: 12px;">
+          Ondalık gösterimlerde virgülün <b>solundaki</b> kısım tam kısım, <b>sağındaki</b> kısım ise kesir kısmıdır.
+        </p>
+
+        <div style="background: #F1F5F9; border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+          <div style="font-weight: 800; color: #0F766E; margin-bottom: 8px;">Örnek: 43,582 Sayısını İnceleyelim</div>
+          <ul style="padding-left: 20px; font-size: 0.88rem;">
+            <li><b>4</b> → Onlar basamağı: 4 × 10 = 40</li>
+            <li><b>3</b> → Birler basamağı: 3 × 1 = 3</li>
+            <li style="color: #059669;"><b>5</b> → <b>Onda birler basamağı:</b> 5 × <span class="frac"><span class="top">1</span><span class="bottom">10</span></span> = <span class="frac"><span class="top">5</span><span class="bottom">10</span></span> (0,5)</li>
+            <li style="color: #D97706;"><b>8</b> → <b>Yüzde birler basamağı:</b> 8 × <span class="frac"><span class="top">1</span><span class="bottom">100</span></span> = <span class="frac"><span class="top">8</span><span class="bottom">100</span></span> (0,08)</li>
+            <li style="color: #2563EB;"><b>2</b> → <b>Binde birler basamağı:</b> 2 × <span class="frac"><span class="top">1</span><span class="bottom">1000</span></span> = <span class="frac"><span class="top">2</span><span class="bottom">1000</span></span> (0,002)</li>
+          </ul>
+        </div>
+
+        <div style="background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 10px; font-size: 0.85rem; color: #92400E;">
+          💡 <b>Altın Kural:</b> Virgülden sonra kaç basamak sağa gidersen, kesrin paydasındaki sıfır sayısı da o kadar olur!<br>
+          1. basamak → Paydada 10<br>
+          2. basamak → Paydada 100<br>
+          3. basamak → Paydada 1000
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       PAZAR TARTISI - 16:9 AKILLI TAHTA EĞİTSEL MATEMATİK OYUNU
+       MEB 6. Sınıf Müfredatı (Ondalık Gösterim & Kesirler)
+       ========================================================= */
+
+    // Web Audio API Synthesizer
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playPop() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(420, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.09);
+      }
+      playCorrect() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const start = this.ctx.currentTime + (idx * 0.07);
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, start);
+          gain.gain.setValueAtTime(0.22, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.26);
+        });
+      }
+      playWrong() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(130, this.ctx.currentTime + 0.28);
+        gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.28);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.3);
+      }
+      playBalance() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.42);
+      }
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const chord = [523.25, 659.25, 783.99, 1046.50];
+        chord.forEach((freq) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.8);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.85);
+        });
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    // Confetti System
+    const confetti = {
+      canvas: document.getElementById('confettiCanvas'),
+      ctx: null,
+      particles: [],
+      animId: null,
+      init() {
+        if (this.ctx) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      },
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      },
+      burst() {
+        this.init();
+        this.particles = [];
+        const colors = ['#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#8B5CF6', '#FCD34D'];
+        for (let i = 0; i < 70; i++) {
+          this.particles.push({
+            x: this.canvas.width / 2,
+            y: this.canvas.height * 0.4,
+            vx: (Math.random() - 0.5) * 14,
+            vy: (Math.random() - 0.7) * 16,
+            size: Math.random() * 8 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rotSpeed: (Math.random() - 0.5) * 8,
+            alpha: 1
+          });
+        }
+        if (!this.animId) this.animate();
+      },
+      animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        let alive = false;
+        for (const p of this.particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.35;
+          p.rotation += p.rotSpeed;
+          p.alpha -= 0.012;
+          if (p.alpha > 0) {
+            alive = true;
+            this.ctx.save();
+            this.ctx.globalAlpha = p.alpha;
+            this.ctx.translate(p.x, p.y);
+            this.ctx.rotate((p.rotation * Math.PI) / 180);
+            this.ctx.fillStyle = p.color;
+            this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            this.ctx.restore();
+          }
+        }
+        if (alive) {
+          this.animId = requestAnimationFrame(() => this.animate());
+        } else {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          this.animId = null;
+        }
+      }
+    };
+
+    // 10 MEB 6. Sınıf Müfredat Senaryosu
+    const SCENARIOS = [
+      {
+        id: 1,
+        mode: 'choice',
+        avatar: '👴',
+        customer: 'Ali Amca',
+        dialogue: 'Ali amca manavdan 3,45 kg elma aldı. Tartı ekranında yanıp sönen <b>5</b> rakamı tartıda ne kadarlık bir kesri temsil eder?',
+        valueParts: [
+          { char: '3', label: 'Birler', place: 'whole', exp: '3 tam' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '4', label: 'Onda 1', place: 'tenth', exp: '4/10' },
+          { char: '5', label: 'Yüzde 1', place: 'hundredth', exp: '5/100', isTarget: true }
+        ],
+        unit: 'kg',
+        unitLabel: 'HASSAS DİJİTAL TARTI',
+        targetDigit: '5',
+        targetPlaceName: 'Yüzde Birler',
+        correctFraction: { top: 5, bottom: 100 },
+        options: [
+          { top: 5, bottom: 10, unit: 'kg' },
+          { top: 5, bottom: 100, unit: 'kg', correct: true },
+          { top: 5, bottom: 1000, unit: 'kg' },
+          { top: 5, bottom: 1, unit: 'kg' }
+        ],
+        explanation: 'Virgülden sonraki 2. basamak YÜZDE BİRLER basamağıdır. 5 rakamının basamak değeri 5 × 1/100 = 5/100 kg\'dır.'
+      },
+      {
+        id: 2,
+        mode: 'choice',
+        avatar: '👩',
+        customer: 'Ayşe Teyze',
+        dialogue: 'Ayşe teyzenin alışveriş fişi tutarı: 42,75 TL. Fişteki <b>7</b> rakamının kuruş değeri hangi kesre karşılık gelir?',
+        valueParts: [
+          { char: '4', label: 'Onlar', place: 'tens', exp: '40 TL' },
+          { char: '2', label: 'Birler', place: 'whole', exp: '2 TL' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '7', label: 'Onda 1', place: 'tenth', exp: '7/10', isTarget: true },
+          { char: '5', label: 'Yüzde 1', place: 'hundredth', exp: '5/100' }
+        ],
+        unit: 'TL',
+        unitLabel: 'KASA VE FİŞ GÖSTERGESİ',
+        targetDigit: '7',
+        targetPlaceName: 'Onda Birler',
+        correctFraction: { top: 7, bottom: 10 },
+        options: [
+          { top: 7, bottom: 10, unit: 'TL', correct: true },
+          { top: 7, bottom: 100, unit: 'TL' },
+          { top: 7, bottom: 1000, unit: 'TL' },
+          { top: 70, bottom: 10, unit: 'TL' }
+        ],
+        explanation: 'Virgülden sonraki 1. basamak ONDA BİRLER basamağıdır. 7 rakamı 7/10 TL (yani 70 kuruş) değerindedir.'
+      },
+      {
+        id: 3,
+        mode: 'scale',
+        avatar: '👨‍🍳',
+        customer: 'Ahmet Şef',
+        dialogue: 'Ahmet usta tatlısı için 2,308 kg taze ceviz tartıyor. Binde birler basamağındaki <b>8</b> rakamını dengelemek için hangi kesir ağırlığını kefeye koymalısın?',
+        valueParts: [
+          { char: '2', label: 'Birler', place: 'whole', exp: '2 kg' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '3', label: 'Onda 1', place: 'tenth', exp: '3/10' },
+          { char: '0', label: 'Yüzde 1', place: 'hundredth', exp: '0' },
+          { char: '8', label: 'Binde 1', place: 'thousandth', exp: '8/1000', isTarget: true }
+        ],
+        unit: 'kg',
+        unitLabel: 'KEFELİ TERAZİ SİSTEMİ',
+        targetDigit: '8',
+        targetPlaceName: 'Binde Birler',
+        correctFraction: { top: 8, bottom: 1000 },
+        options: [
+          { top: 8, bottom: 10, unit: 'kg' },
+          { top: 8, bottom: 100, unit: 'kg' },
+          { top: 8, bottom: 1000, unit: 'kg', correct: true },
+          { top: 8, bottom: 10000, unit: 'kg' }
+        ],
+        explanation: 'Virgülden sonraki 3. basamak BİNDE BİRLER basamağıdır. 8 rakamı 8/1000 kg (yani 8 gram) değerindedir.'
+      },
+      {
+        id: 4,
+        mode: 'choice',
+        avatar: '👧',
+        customer: 'Zeynep',
+        dialogue: 'Zeynep manavdan 1,250 kg çilek seçti. Tartıda parlayan <b>2</b> rakamı kilogramın kaçta kaçını gösterir?',
+        valueParts: [
+          { char: '1', label: 'Birler', place: 'whole', exp: '1 kg' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '2', label: 'Onda 1', place: 'tenth', exp: '2/10', isTarget: true },
+          { char: '5', label: 'Yüzde 1', place: 'hundredth', exp: '5/100' },
+          { char: '0', label: 'Binde 1', place: 'thousandth', exp: '0' }
+        ],
+        unit: 'kg',
+        unitLabel: 'DİJİTAL MEYVE TARTISI',
+        targetDigit: '2',
+        targetPlaceName: 'Onda Birler',
+        correctFraction: { top: 2, bottom: 10 },
+        options: [
+          { top: 2, bottom: 100, unit: 'kg' },
+          { top: 2, bottom: 10, unit: 'kg', correct: true },
+          { top: 2, bottom: 1000, unit: 'kg' },
+          { top: 20, bottom: 1000, unit: 'kg' }
+        ],
+        explanation: 'Virgülden sonra ilk gelen basamak ONDA BİRLER basamağıdır. 2 rakamı 2/10 kg (yani 200 gram) değerindedir.'
+      },
+      {
+        id: 5,
+        mode: 'choice',
+        avatar: '🧑',
+        customer: 'Emre',
+        dialogue: 'Emre markette para üstü olarak 18,06 TL aldı. Kuruş hanesindeki <b>6</b> rakamının kesir olarak ifadesi nedir?',
+        valueParts: [
+          { char: '1', label: 'Onlar', place: 'tens', exp: '10 TL' },
+          { char: '8', label: 'Birler', place: 'whole', exp: '8 TL' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '0', label: 'Onda 1', place: 'tenth', exp: '0' },
+          { char: '6', label: 'Yüzde 1', place: 'hundredth', exp: '6/100', isTarget: true }
+        ],
+        unit: 'TL',
+        unitLabel: 'PARA ÜSTÜ SAYACI',
+        targetDigit: '6',
+        targetPlaceName: 'Yüzde Birler',
+        correctFraction: { top: 6, bottom: 100 },
+        options: [
+          { top: 6, bottom: 10, unit: 'TL' },
+          { top: 6, bottom: 1000, unit: 'TL' },
+          { top: 6, bottom: 100, unit: 'TL', correct: true },
+          { top: 60, bottom: 100, unit: 'TL' }
+        ],
+        explanation: '0 onda birler basamağında, 6 ise YÜZDE BİRLER basamağındadır. Basamak değeri 6/100 TL (6 kuruş) olur.'
+      },
+      {
+        id: 6,
+        mode: 'scale',
+        avatar: '🧓',
+        customer: 'Fatma Hanım',
+        dialogue: 'Fatma teyze hassas baharat tartısında 0,075 kg hakiki safran tartıyor. Binde birler basamağındaki <b>5</b> rakamı için terazinin diğer kefesine ne konmalıdır?',
+        valueParts: [
+          { char: '0', label: 'Birler', place: 'whole', exp: '0' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '0', label: 'Onda 1', place: 'tenth', exp: '0' },
+          { char: '7', label: 'Yüzde 1', place: 'hundredth', exp: '7/100' },
+          { char: '5', label: 'Binde 1', place: 'thousandth', exp: '5/1000', isTarget: true }
+        ],
+        unit: 'kg',
+        unitLabel: 'HASSAS BAHARAT TERAZİSİ',
+        targetDigit: '5',
+        targetPlaceName: 'Binde Birler',
+        correctFraction: { top: 5, bottom: 1000 },
+        options: [
+          { top: 5, bottom: 1000, unit: 'kg', correct: true },
+          { top: 5, bottom: 100, unit: 'kg' },
+          { top: 5, bottom: 10, unit: 'kg' },
+          { top: 50, bottom: 1000, unit: 'kg' }
+        ],
+        explanation: 'Virgülden sonra 3. sıradaki basamak BİNDE BİRLER basamağıdır. 5 rakamının değeri 5/1000 kg\'dır.'
+      },
+      {
+        id: 7,
+        mode: 'choice',
+        avatar: '🍉',
+        customer: 'Mehmet Usta',
+        dialogue: 'Mehmet usta 7,842 kg ağırlığında dev bir Diyarbakır karpuzu tarttı. Ekranda vurgulanan <b>4</b> rakamının kesir açılımı nedir?',
+        valueParts: [
+          { char: '7', label: 'Birler', place: 'whole', exp: '7 kg' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '8', label: 'Onda 1', place: 'tenth', exp: '8/10' },
+          { char: '4', label: 'Yüzde 1', place: 'hundredth', exp: '4/100', isTarget: true },
+          { char: '2', label: 'Binde 1', place: 'thousandth', exp: '2/1000' }
+        ],
+        unit: 'kg',
+        unitLabel: 'AĞIR YÜK PAZAR KANTARI',
+        targetDigit: '4',
+        targetPlaceName: 'Yüzde Birler',
+        correctFraction: { top: 4, bottom: 100 },
+        options: [
+          { top: 4, bottom: 10, unit: 'kg' },
+          { top: 4, bottom: 1000, unit: 'kg' },
+          { top: 4, bottom: 100, unit: 'kg', correct: true },
+          { top: 40, bottom: 100, unit: 'kg' }
+        ],
+        explanation: 'Virgülden sonra 1. basamak (8) onda birler, 2. basamak (4) YÜZDE BİRLER basamağıdır. Değeri 4/100 kg\'dır.'
+      },
+      {
+        id: 8,
+        mode: 'choice',
+        avatar: '🌰',
+        customer: 'Giresunlu Hasan',
+        dialogue: 'Hasan usta 0,450 kg kavrulmuş fındık paketledi. Fındık tartısındaki <b>4</b> rakamının temsil ettiği kesir değeri hangisidir?',
+        valueParts: [
+          { char: '0', label: 'Birler', place: 'whole', exp: '0' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '4', label: 'Onda 1', place: 'tenth', exp: '4/10', isTarget: true },
+          { char: '5', label: 'Yüzde 1', place: 'hundredth', exp: '5/100' },
+          { char: '0', label: 'Binde 1', place: 'thousandth', exp: '0' }
+        ],
+        unit: 'kg',
+        unitLabel: 'KURUYEMİŞ ELEKTRONİK TARTISI',
+        targetDigit: '4',
+        targetPlaceName: 'Onda Birler',
+        correctFraction: { top: 4, bottom: 10 },
+        options: [
+          { top: 4, bottom: 10, unit: 'kg', correct: true },
+          { top: 4, bottom: 100, unit: 'kg' },
+          { top: 4, bottom: 1000, unit: 'kg' },
+          { top: 4, bottom: 40, unit: 'kg' }
+        ],
+        explanation: 'Virgülden sonra gelen 1. basamak ONDA BİRLER basamağıdır. 4 rakamı 4/10 kg (400 gram) anlamına gelir.'
+      },
+      {
+        id: 9,
+        mode: 'scale',
+        avatar: '🫒',
+        customer: 'Gemlikli Selim',
+        dialogue: 'Selim amcanın teneke zeytin tartısı 1,029 kg gösteriyor. Binde birler basamağındaki <b>9</b> gramlık farkı kesir ağırlıklarından hangisiyle dengelersin?',
+        valueParts: [
+          { char: '1', label: 'Birler', place: 'whole', exp: '1 kg' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '0', label: 'Onda 1', place: 'tenth', exp: '0' },
+          { char: '2', label: 'Yüzde 1', place: 'hundredth', exp: '2/100' },
+          { char: '9', label: 'Binde 1', place: 'thousandth', exp: '9/1000', isTarget: true }
+        ],
+        unit: 'kg',
+        unitLabel: 'ZEYTİN REYONU DENGELENMİŞ TERAZİ',
+        targetDigit: '9',
+        targetPlaceName: 'Binde Birler',
+        correctFraction: { top: 9, bottom: 1000 },
+        options: [
+          { top: 9, bottom: 10, unit: 'kg' },
+          { top: 9, bottom: 100, unit: 'kg' },
+          { top: 9, bottom: 1000, unit: 'kg', correct: true },
+          { top: 90, bottom: 1000, unit: 'kg' }
+        ],
+        explanation: '9 rakamı virgülden sonra 3. basamakta yer aldığı için BİNDE BİRLER basamağındadır ve değeri 9/1000 kg\'dır.'
+      },
+      {
+        id: 10,
+        mode: 'choice',
+        avatar: '🍯',
+        customer: 'Muğlalı Arıcı Kerem',
+        dialogue: 'Kerem süzme çam balı kavanozunu tarttı: 0,805 kg. Tartıdaki <b>5</b> rakamı balın kaçta kaçlık kesrini belirtir?',
+        valueParts: [
+          { char: '0', label: 'Birler', place: 'whole', exp: '0' },
+          { char: ',', label: '', place: 'comma', exp: '' },
+          { char: '8', label: 'Onda 1', place: 'tenth', exp: '8/10' },
+          { char: '0', label: 'Yüzde 1', place: 'hundredth', exp: '0' },
+          { char: '5', label: 'Binde 1', place: 'thousandth', exp: '5/1000', isTarget: true }
+        ],
+        unit: 'kg',
+        unitLabel: 'ORGANİK BAL TARTISI',
+        targetDigit: '5',
+        targetPlaceName: 'Binde Birler',
+        correctFraction: { top: 5, bottom: 1000 },
+        options: [
+          { top: 5, bottom: 100, unit: 'kg' },
+          { top: 5, bottom: 10, unit: 'kg' },
+          { top: 5, bottom: 1000, unit: 'kg', correct: true },
+          { top: 50, bottom: 100, unit: 'kg' }
+        ],
+        explanation: '0,805 ondalık gösteriminde 5 rakamı virgülden sonra 3. basamaktadır (BİNDE BİRLER), kesir değeri 5/1000 kg\'dır.'
+      }
+    ];
+
+    // Game State
+    const gameState = {
+      currentQuestionIndex: 0,
+      score: 0,
+      lives: 3,
+      correctCount: 0,
+      wrongCount: 0,
+      timerEnabled: true,
+      timeLeft: 30,
+      timerInterval: null,
+      questionAnswered: false,
+      gameOver: false,
+      finishTimeout: null,
+      questions: []
+    };
+
+    // DOM Elements
+    const appContainer = document.getElementById('appContainer');
+    const startScreen = document.getElementById('startScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const resultScreen = document.getElementById('resultScreen');
+
+    const gameHud = document.getElementById('gameHud');
+    const progressTrack = document.getElementById('progressTrack');
+    const progressBar = document.getElementById('progressBar');
+
+    const hudQuestionNum = document.getElementById('hudQuestionNum');
+    const hudScore = document.getElementById('hudScore');
+    const hudLives = document.getElementById('hudLives');
+    const timerBadge = document.getElementById('timerBadge');
+    const timerText = document.getElementById('timerText');
+
+    const customerAvatar = document.getElementById('customerAvatar');
+    const customerDialogue = document.getElementById('customerDialogue');
+    const scaleModeTag = document.getElementById('scaleModeTag');
+    const digitsContainer = document.getElementById('digitsContainer');
+    const inspectorClueBox = document.getElementById('inspectorClueBox');
+    const mechScaleContainer = document.getElementById('mechScaleContainer');
+    const scaleBeamGroup = document.getElementById('scaleBeamGroup');
+    const taskQuestionText = document.getElementById('taskQuestionText');
+    const feedbackBanner = document.getElementById('feedbackBanner');
+    const feedbackTitle = document.getElementById('feedbackTitle');
+    const feedbackDesc = document.getElementById('feedbackDesc');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundPrefBtn = document.getElementById('soundPrefBtn');
+    const timerToggleBtn = document.getElementById('timerToggleBtn');
+    const infoModalBtn = document.getElementById('infoModalBtn');
+    const infoModal = document.getElementById('infoModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const fullscreenToggleBtn = document.getElementById('fullscreenToggleBtn');
+    const fullscreenIcon = document.getElementById('fullscreenIcon');
+    const fullscreenLabel = document.getElementById('fullscreenLabel');
+
+    const startGameBtn = document.getElementById('startGameBtn');
+    const restartGameBtn = document.getElementById('restartGameBtn');
+
+    // Setup Event Listeners
+    soundToggleBtn.addEventListener('click', toggleSound);
+    soundPrefBtn.addEventListener('click', toggleSound);
+    timerToggleBtn.addEventListener('click', toggleTimerPref);
+    infoModalBtn.addEventListener('click', () => { sound.playPop(); infoModal.classList.add('open'); });
+    closeModalBtn.addEventListener('click', () => { sound.playPop(); infoModal.classList.remove('open'); });
+    infoModal.addEventListener('click', (e) => {
+      if (e.target === infoModal) infoModal.classList.remove('open');
+    });
+
+    fullscreenToggleBtn.addEventListener('click', toggleFullscreen);
+
+    startGameBtn.addEventListener('click', () => {
+      sound.playPop();
+      initGame();
+    });
+
+    restartGameBtn.addEventListener('click', () => {
+      sound.playPop();
+      initGame();
+    });
+
+    nextQuestionBtn.addEventListener('click', () => {
+      nextQuestionBtn.blur();
+      sound.playPop();
+      advanceQuestion();
+    });
+
+    // Keyboard Shortcuts for Akıllı Tahta & Remote Controls
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      const modalOpen = infoModal.classList.contains('open');
+      if (e.key === 'Escape' && modalOpen) {
+        infoModal.classList.remove('open');
+        return;
+      }
+      if (modalOpen) return;
+      const onGame = gameScreen.classList.contains('active');
+      if (e.key === 'F11' || e.key === 'f' || e.key === 'F') {
+        if (e.target.tagName !== 'INPUT') {
+          e.preventDefault();
+          toggleFullscreen();
+        }
+      } else if (e.key === ' ' || e.key === 'Enter') {
+        // Odak bir seçenek kartındaysa kartın kendi klavye işleyicisi çalışır
+        if (e.target.classList && e.target.classList.contains('option-card')) return;
+        if (onGame && nextQuestionBtn.style.display !== 'none') {
+          e.preventDefault();
+          sound.playPop();
+          advanceQuestion();
+        }
+      } else if (['1', '2', '3', '4'].includes(e.key) && onGame) {
+        const idx = parseInt(e.key) - 1;
+        const options = optionsContainer.children;
+        if (options && options[idx]) {
+          options[idx].click();
+        }
+      }
+    });
+
+    function toggleFullscreen() {
+      sound.playPop();
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        const el = document.documentElement;
+        if (el.requestFullscreen) {
+          el.requestFullscreen().catch(() => {});
+        } else if (el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+    function handleFullscreenChange() {
+      const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      document.body.classList.toggle('is-fullscreen', isFull);
+      if (isFull) {
+        fullscreenIcon.textContent = '✕';
+        fullscreenLabel.textContent = 'Küçült';
+      } else {
+        fullscreenIcon.textContent = '⛶';
+        fullscreenLabel.textContent = 'Tam Ekran';
+      }
+    }
+
+    function toggleSound() {
+      sound.enabled = !sound.enabled;
+      sound.init();
+      const txt = sound.enabled ? '🔊' : '🔇';
+      soundToggleBtn.textContent = txt;
+      soundPrefBtn.innerHTML = `<span>${sound.enabled ? '🔊 Sesler Açık' : '🔇 Sesler Kapalı'}</span>`;
+      soundPrefBtn.classList.toggle('active', sound.enabled);
+    }
+
+    function toggleTimerPref() {
+      gameState.timerEnabled = !gameState.timerEnabled;
+      sound.playPop();
+      timerToggleBtn.classList.toggle('active', gameState.timerEnabled);
+      timerToggleBtn.innerHTML = gameState.timerEnabled
+        ? '<span>⏱️ 30 Sn Zamanlı</span>'
+        : '<span>🕊️ Süresiz (Rahat Mod)</span>';
+    }
+
+    // Start New Game Session
+    function initGame() {
+      gameState.currentQuestionIndex = 0;
+      gameState.score = 0;
+      gameState.lives = 3;
+      gameState.correctCount = 0;
+      gameState.wrongCount = 0;
+      gameState.gameOver = false;
+      clearTimeout(gameState.finishTimeout);
+      gameState.questions = [...SCENARIOS];
+
+      startScreen.classList.remove('active');
+      resultScreen.classList.remove('active');
+      gameScreen.classList.add('active');
+
+      gameHud.style.display = 'flex';
+      progressTrack.style.display = 'block';
+
+      if (!gameState.timerEnabled) {
+        timerBadge.style.display = 'none';
+      } else {
+        timerBadge.style.display = 'flex';
+      }
+
+      updateHud();
+      loadQuestion();
+    }
+
+    function updateHud() {
+      hudQuestionNum.textContent = `${gameState.currentQuestionIndex + 1} / ${gameState.questions.length}`;
+      hudScore.textContent = gameState.score;
+      const hearts = '❤️'.repeat(Math.max(0, gameState.lives)) + '🖤'.repeat(Math.max(0, 3 - gameState.lives));
+      hudLives.textContent = hearts;
+      const pct = ((gameState.currentQuestionIndex + 1) / gameState.questions.length) * 100;
+      progressBar.style.width = `${pct}%`;
+    }
+
+    function loadQuestion() {
+      gameState.questionAnswered = false;
+      const q = gameState.questions[gameState.currentQuestionIndex];
+
+      updateHud();
+      feedbackBanner.className = 'feedback-banner';
+      nextQuestionBtn.style.display = 'none';
+
+      // Customer section
+      customerAvatar.textContent = q.avatar;
+      customerDialogue.innerHTML = q.dialogue;
+      scaleModeTag.textContent = q.unitLabel;
+
+      // Question text
+      taskQuestionText.innerHTML = `Tartıdaki <b>${q.targetDigit}</b> rakamının basamak değerini kesir olarak seçiniz:`;
+
+      // Build Digital Meter
+      digitsContainer.innerHTML = '';
+      q.valueParts.forEach((part, index) => {
+        if (part.place === 'comma') {
+          const comma = document.createElement('div');
+          comma.className = 'comma-separator';
+          comma.textContent = ',';
+          digitsContainer.appendChild(comma);
+        } else {
+          const box = document.createElement('div');
+          box.className = `digit-box ${part.isTarget ? 'target' : ''}`;
+          box.innerHTML = `<span>${part.char}</span><span class="digit-label">${part.label}</span>`;
+          
+          box.addEventListener('click', () => {
+            sound.playPop();
+            inspectDigit(part, q);
+          });
+          digitsContainer.appendChild(box);
+        }
+      });
+
+      // Unit badge (kg or TL)
+      const unitSpan = document.createElement('div');
+      unitSpan.className = 'scale-unit-badge';
+      unitSpan.textContent = q.unit;
+      digitsContainer.appendChild(unitSpan);
+
+      // Mechanical Scale Mode check
+      if (q.mode === 'scale') {
+        mechScaleContainer.classList.add('show');
+        scaleBeamGroup.style.transform = 'rotate(-10deg)';
+        document.getElementById('leftPanEmoji').textContent = q.avatar;
+        document.getElementById('rightPanEmoji').textContent = '⚖️';
+      } else {
+        mechScaleContainer.classList.remove('show');
+      }
+
+      inspectorClueBox.innerHTML = `🔍 <b>${q.targetDigit}</b> rakamına veya basamaklara dokunarak kesir açılımını gör!`;
+
+      // Build Option Cards with Shortcut Numbers [1], [2], [3], [4]
+      optionsContainer.innerHTML = '';
+      q.options.forEach((opt, optIndex) => {
+        const btn = document.createElement('div');
+        btn.className = 'option-card';
+        btn.setAttribute('role', 'button');
+        btn.setAttribute('tabindex', '0');
+
+        btn.innerHTML = `
+          <span class="shortcut-badge">${optIndex + 1}</span>
+          <div class="option-fraction">
+            <span class="frac"><span class="top">${opt.top}</span><span class="bottom">${opt.bottom}</span></span>
+          </div>
+          <div class="option-unit">${opt.unit}</div>
+        `;
+
+        btn.setAttribute('aria-label', `${opt.top} bölü ${opt.bottom} ${opt.unit}`);
+        btn.addEventListener('click', () => handleOptionClick(opt, btn, q));
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleOptionClick(opt, btn, q);
+          }
+        });
+        optionsContainer.appendChild(btn);
+      });
+
+      startTimer();
+    }
+
+    function inspectDigit(part, q) {
+      if (part.place === 'comma') return;
+      let explanation = '';
+      if (part.place === 'whole' || part.place === 'tens') {
+        explanation = `<b>${part.char}</b> rakamı tam kısımdadır (${part.label} basamağı). Değeri: ${part.exp}.`;
+      } else if (part.place === 'tenth') {
+        explanation = `<b>${part.char}</b> rakamı <b>Onda Birler</b> basamağında! Kesir karşılığı: ${part.char} × 1/10 = <b>${part.char}/10</b> ${q.unit}`;
+      } else if (part.place === 'hundredth') {
+        explanation = `<b>${part.char}</b> rakamı <b>Yüzde Birler</b> basamağında! Kesir karşılığı: ${part.char} × 1/100 = <b>${part.char}/100</b> ${q.unit}`;
+      } else if (part.place === 'thousandth') {
+        explanation = `<b>${part.char}</b> rakamı <b>Binde Birler</b> basamağında! Kesir karşılığı: ${part.char} × 1/1000 = <b>${part.char}/1000</b> ${q.unit}`;
+      }
+      inspectorClueBox.innerHTML = `💡 ${explanation}`;
+    }
+
+    function startTimer() {
+      clearInterval(gameState.timerInterval);
+      if (!gameState.timerEnabled) return;
+
+      gameState.timeLeft = 30;
+      timerBadge.classList.remove('urgent');
+      timerText.textContent = `${gameState.timeLeft}s`;
+
+      gameState.timerInterval = setInterval(() => {
+        gameState.timeLeft--;
+        timerText.textContent = `${gameState.timeLeft}s`;
+
+        if (gameState.timeLeft <= 8) {
+          timerBadge.classList.add('urgent');
+        }
+
+        if (gameState.timeLeft <= 0) {
+          clearInterval(gameState.timerInterval);
+          handleTimeUp();
+        }
+      }, 1000);
+    }
+
+    function handleOptionClick(opt, cardEl, q) {
+      if (gameState.questionAnswered) return;
+      gameState.questionAnswered = true;
+      clearInterval(gameState.timerInterval);
+
+      if (opt.correct) {
+        sound.playCorrect();
+        confetti.burst();
+        cardEl.classList.add('correct');
+        gameState.score += 100;
+        gameState.correctCount++;
+
+        if (q.mode === 'scale') {
+          sound.playBalance();
+          scaleBeamGroup.style.transform = 'rotate(0deg)';
+          document.getElementById('rightPanEmoji').textContent = '✅';
+        }
+
+        feedbackBanner.className = 'feedback-banner success show';
+        feedbackTitle.innerHTML = '🎉 Harika! Doğru Cevap (+100 Puan)';
+        feedbackDesc.innerHTML = q.explanation;
+        nextQuestionBtn.style.display = 'flex';
+      } else {
+        sound.playWrong();
+        cardEl.classList.add('wrong');
+        gameState.lives--;
+        gameState.wrongCount++;
+
+        Array.from(optionsContainer.children).forEach((child, i) => {
+          if (q.options[i].correct) {
+            child.classList.add('correct');
+          }
+        });
+
+        feedbackBanner.className = 'feedback-banner error show';
+        feedbackTitle.innerHTML = '⚠️ Dikkat! Açıklamayı İnceleyelim';
+        feedbackDesc.innerHTML = `${q.explanation} (Kalan can: ${Math.max(0, gameState.lives)})`;
+        nextQuestionBtn.style.display = 'flex';
+      }
+
+      updateHud();
+      checkGameOver();
+    }
+
+    function checkGameOver() {
+      if (gameState.lives > 0) return;
+      gameState.gameOver = true;
+      nextQuestionBtn.style.display = 'none';
+      feedbackDesc.innerHTML += '<br><b>❤️ Canların bitti! Sonuç ekranına geçiliyor...</b>';
+      clearTimeout(gameState.finishTimeout);
+      gameState.finishTimeout = setTimeout(finishGame, 2500);
+    }
+
+    function handleTimeUp() {
+      if (gameState.questionAnswered) return;
+      gameState.questionAnswered = true;
+      sound.playWrong();
+      gameState.lives--;
+      gameState.wrongCount++;
+      const q = gameState.questions[gameState.currentQuestionIndex];
+
+      Array.from(optionsContainer.children).forEach((child, i) => {
+        if (q.options[i].correct) {
+          child.classList.add('correct');
+        }
+      });
+
+      feedbackBanner.className = 'feedback-banner error show';
+      feedbackTitle.innerHTML = '⏱️ Süre Doldu!';
+      feedbackDesc.innerHTML = `Bu soruda doğru cevap: <b>${q.correctFraction.top}/${q.correctFraction.bottom} ${q.unit}</b> idi. ${q.explanation}`;
+      nextQuestionBtn.style.display = 'flex';
+      updateHud();
+      checkGameOver();
+    }
+
+    function advanceQuestion() {
+      if (gameState.gameOver || !gameState.questionAnswered) return;
+      gameState.currentQuestionIndex++;
+      if (gameState.currentQuestionIndex >= gameState.questions.length) {
+        finishGame();
+      } else {
+        loadQuestion();
+      }
+    }
+
+    function finishGame() {
+      clearInterval(gameState.timerInterval);
+      clearTimeout(gameState.finishTimeout);
+      gameState.gameOver = true;
+      nextQuestionBtn.style.display = 'none';
+      timerBadge.classList.remove('urgent');
+      gameScreen.classList.remove('active');
+      gameHud.style.display = 'none';
+      progressTrack.style.display = 'none';
+      resultScreen.classList.add('active');
+
+      document.getElementById('finalScoreVal').textContent = gameState.score;
+      document.getElementById('statCorrect').textContent = gameState.correctCount;
+      document.getElementById('statWrong').textContent = gameState.wrongCount;
+
+      const total = gameState.correctCount + gameState.wrongCount;
+      const rate = total > 0 ? Math.round((gameState.correctCount / total) * 100) : 0;
+      document.getElementById('statRate').textContent = `%${rate}`;
+
+      const badgeEmoji = document.getElementById('badgeEmoji');
+      const badgeTitle = document.getElementById('badgeTitle');
+      const badgeSummary = document.getElementById('badgeSummary');
+      const analysis = document.getElementById('pedagogyAnalysisText');
+
+      if (gameState.score >= 900) {
+        sound.playFanfare();
+        confetti.burst();
+        badgeEmoji.textContent = '🏆';
+        badgeTitle.textContent = 'Manavlar Şampiyonu & Ondalık Ustası';
+        badgeSummary.textContent = 'Ondalık gösterimlerin onda birler, yüzde birler ve binde birler basamaklarını kesirlerle eksiksiz eşleştirdin!';
+        analysis.innerHTML = 'Tebrikler! Hem tartı kilogram hesaplamalarında hem de fiş kuruş çözümlemelerinde kusursuz bir başarı sergiledin.';
+      } else if (gameState.score >= 700) {
+        sound.playFanfare();
+        badgeEmoji.textContent = '🌟';
+        badgeTitle.textContent = 'Hassas Tartı Uzmanı';
+        badgeSummary.textContent = 'Gerçek yaşam problemlerinde basamak değerlerini büyük bir doğrulukla buldun.';
+        analysis.innerHTML = 'Harika bir performans! Binde birler ve yüzde birler basamaklarının paydasındaki sıfır sayısını çok iyi kavradın.';
+      } else if (gameState.score >= 500) {
+        sound.playCorrect();
+        badgeEmoji.textContent = '🍏';
+        badgeTitle.textContent = 'Becerikli Pazar Esnafı';
+        badgeSummary.textContent = 'Ondalık gösterimleri kesirlere dönüştürmede iyi bir temel oluşturdun.';
+        analysis.innerHTML = 'İyi bir sonuç! Virgülden sonraki 2. ve 3. basamakları ayırt etmeye biraz daha özen göstererek tam puan alabilirsin.';
+      } else {
+        badgeEmoji.textContent = '🌱';
+        badgeTitle.textContent = 'Gayretli Çırak';
+        badgeSummary.textContent = 'Her deneme seni daha usta bir matematikçiye dönüştürecek!';
+        analysis.innerHTML = 'Unutma: Virgülden sonraki 1. basamak ONDA BİRLER (1/10), 2. basamak YÜZDE BİRLER (1/100), 3. basamak ise BİNDE BİRLERDİR (1/1000). Yeniden deneyerek reyonun şampiyonu olabilirsin!';
+      }
+    }
+  </script>
+</body>
+</html>
