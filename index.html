@@ -1442,7 +1442,7 @@
         mode: 'scale',
         avatar: '👨‍🍳',
         customer: 'Ahmet Şef',
-        dialogue: 'Ahmet usta tatlısı için 2,308 kg taze ceviz tartıyor. Binde birler basamağındaki <b>8</b> rakamını dengelemek için hangi kesir ağırlığını kefeye koymalısın?',
+        dialogue: 'Ahmet usta tatlısı için 2,308 kg taze ceviz tartıyor. Tartıda parlayan <b>8</b> rakamını dengelemek için hangi kesir ağırlığını kefeye koymalısın?',
         valueParts: [
           { char: '2', label: 'Birler', place: 'whole', exp: '2 kg' },
           { char: ',', label: '', place: 'comma', exp: '' },
@@ -1520,7 +1520,7 @@
         mode: 'scale',
         avatar: '🧓',
         customer: 'Fatma Hanım',
-        dialogue: 'Fatma teyze hassas baharat tartısında 0,075 kg hakiki safran tartıyor. Binde birler basamağındaki <b>5</b> rakamı için terazinin diğer kefesine ne konmalıdır?',
+        dialogue: 'Fatma teyze hassas baharat tartısında 0,075 kg hakiki safran tartıyor. Tartıda parlayan <b>5</b> rakamı için terazinin diğer kefesine ne konmalıdır?',
         valueParts: [
           { char: '0', label: 'Birler', place: 'whole', exp: '0' },
           { char: ',', label: '', place: 'comma', exp: '' },
@@ -1598,7 +1598,7 @@
         mode: 'scale',
         avatar: '🫒',
         customer: 'Gemlikli Selim',
-        dialogue: 'Selim amcanın teneke zeytin tartısı 1,029 kg gösteriyor. Binde birler basamağındaki <b>9</b> gramlık farkı kesir ağırlıklarından hangisiyle dengelersin?',
+        dialogue: 'Selim amcanın teneke zeytin tartısı 1,029 kg gösteriyor. Tartıda parlayan <b>9</b> rakamını kesir ağırlıklarından hangisiyle dengelersin?',
         valueParts: [
           { char: '1', label: 'Birler', place: 'whole', exp: '1 kg' },
           { char: ',', label: '', place: 'comma', exp: '' },
@@ -1826,7 +1826,9 @@
       gameState.wrongCount = 0;
       gameState.gameOver = false;
       clearTimeout(gameState.finishTimeout);
-      gameState.questions = [...SCENARIOS];
+      const karistir = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+      gameState.questions = karistir(SCENARIOS).map(q => ({ ...q, options: karistir(q.options) }));
+      gameState.placeLog = [];   // ders sonu özeti: {place, ok}
 
       startScreen.classList.remove('active');
       resultScreen.classList.remove('active');
@@ -1988,6 +1990,7 @@
         cardEl.classList.add('correct');
         gameState.score += 100;
         gameState.correctCount++;
+        logPlace(q, true);
 
         if (q.mode === 'scale') {
           sound.playBalance();
@@ -2004,6 +2007,7 @@
         cardEl.classList.add('wrong');
         gameState.lives--;
         gameState.wrongCount++;
+        logPlace(q, false, opt);
 
         Array.from(optionsContainer.children).forEach((child, i) => {
           if (q.options[i].correct) {
@@ -2037,6 +2041,7 @@
       gameState.lives--;
       gameState.wrongCount++;
       const q = gameState.questions[gameState.currentQuestionIndex];
+      logPlace(q, false, null);
 
       Array.from(optionsContainer.children).forEach((child, i) => {
         if (q.options[i].correct) {
@@ -2060,6 +2065,28 @@
       } else {
         loadQuestion();
       }
+    }
+
+    /* Ders sonu özeti: hangi basamakta kaç doğru / yanlış */
+    const PLACE_NAMES = { tenth: 'Onda birler', hundredth: 'Yüzde birler', thousandth: 'Binde birler' };
+    function logPlace(q, ok, opt) {
+      const t = q.valueParts.find(p => p.isTarget);
+      (gameState.placeLog = gameState.placeLog || []).push({
+        place: t ? t.place : '?', ok,
+        num: q.valueParts.map(p => p.place === 'comma' ? ',' : p.char).join(''), digit: q.targetDigit,
+        picked: opt ? opt.top + '/' + opt.bottom : 'süre doldu', right: q.correctFraction.top + '/' + q.correctFraction.bottom
+      });
+    }
+    function placeSummaryHTML() {
+      const log = gameState.placeLog || [];
+      if (!log.length) return '';
+      const rows = Object.keys(PLACE_NAMES).map(k => {
+        const a = log.filter(x => x.place === k); if (!a.length) return '';
+        const ok = a.filter(x => x.ok).length, col = ok === a.length ? '#16a34a' : ok * 2 >= a.length ? '#d97706' : '#dc2626';
+        return `<span style="display:inline-block;margin:4px 6px 0 0;padding:4px 12px;border-radius:999px;border:2px solid ${col};font-weight:700;color:#1e293b;background:#fff">${PLACE_NAMES[k]} ${ok}/${a.length}</span>`;
+      }).join('');
+      const miss = log.filter(x => !x.ok).map(x => `<li><b>${x.num}</b> sayısında ${x.digit}: <s style="color:#dc2626">${x.picked}</s> → <b>${x.right}</b></li>`).join('');
+      return `<div style="margin-top:8px">${rows}</div>` + (miss ? `<ul style="margin:8px 0 0;padding-left:18px;font-size:.88rem;color:#334155;line-height:1.5;max-height:5.6em;overflow:auto">${miss}</ul>` : '');
     }
 
     function finishGame() {
@@ -2111,6 +2138,7 @@
         badgeSummary.textContent = 'Her deneme seni daha usta bir matematikçiye dönüştürecek!';
         analysis.innerHTML = 'Unutma: Virgülden sonraki 1. basamak ONDA BİRLER (1/10), 2. basamak YÜZDE BİRLER (1/100), 3. basamak ise BİNDE BİRLERDİR (1/1000). Yeniden deneyerek reyonun şampiyonu olabilirsin!';
       }
+      analysis.innerHTML += placeSummaryHTML();
     }
   </script>
 
@@ -2126,7 +2154,7 @@
 <div class="mbu-sig">Made by Us</div>
 <script>
 (function(){
-  const APP_VERSION='1.1.0';
+  const APP_VERSION='1.2.0';
   const PAGE_URL='https://ekerem.github.io/pazartartisi/';
   const btn=document.getElementById('mbuUpd');
   let tEl=null,tTimer=0;
